@@ -84,10 +84,34 @@ def song_by_author(
 
 
 
+@router.get("/songs_by_country", response_model=List[schemas.SongOut])
+def song_by_region(
+        country: str = Query(..., description="Страна"),
+        db: Session = Depends(get_db)
+):
+    song = db.query(Song).filter(models.Song.country == country).all()
+    if not song:
+        raise HTTPException(status_code=404, detail="Треки не найдены")
+    return song
 
 
 
 
+
+
+
+
+
+
+@router.delete("/delete_song")
+def delete_song(song_id: int, db: Session = Depends(get_db)):
+    song = db.query(models.Song).filter(models.Song.id == song_id).first()
+    if not song:
+        raise HTTPException(status_code=404, detail="Трек не найден")
+
+    db.delete(song)
+    db.commit()
+    return {"message": "Трек удален"}
 
 
 

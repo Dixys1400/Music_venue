@@ -99,10 +99,6 @@ def song_by_region(
 
 
 
-
-
-
-
 @router.delete("/delete_song")
 def delete_song(song_id: int, db: Session = Depends(get_db)):
     song = db.query(models.Song).filter(models.Song.id == song_id).first()
@@ -117,6 +113,13 @@ def delete_song(song_id: int, db: Session = Depends(get_db)):
 
 
 
+
+@router.get("/top5_songs_by_likes", response_model=List[schemas.SongOut])
+def get_top5_songs_by_likes(db: Session = Depends(get_db)):
+    top_songs = db.query(models.Song).order_by(models.Song.likes.desc()).limit(5).all()
+    if not top_songs:
+        raise HTTPException(status_code=404, detail="Треки не найдены")
+    return top_songs
 
 
 

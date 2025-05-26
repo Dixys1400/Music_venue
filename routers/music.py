@@ -122,6 +122,13 @@ def get_top5_songs_by_likes(db: Session = Depends(get_db)):
     return top_songs
 
 
+@router.get("/top5_songs_by_auditions", response_model=List[schemas.SongOut])
+def get_top5_songs_by_auditions(db: Session = Depends(get_db)):
+    top_songs_au = db.query(models.Song).order_by(models.Song.auditions.desc()).limit(5).all()
+    if not top_songs_au:
+        raise HTTPException(status_code=404, detail="Треки не найдены")
+    return top_songs_au
+
 
 
 

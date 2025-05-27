@@ -144,3 +144,10 @@ def create_comment(comment: schemas.CommentCreate, db: Session = Depends(get_db)
 
 
 
+@router.get("/comments_by_id", response_model=List[schemas.CommentOut])
+def get_comments_by_id(song_id: int, db: Session = Depends(get_db)):
+    comments = db.query(models.Comment).filter(models.Comment.song_id == song_id).all()
+    if not comments:
+        raise HTTPException(status_code=404, detail="Комментариев не найдено")
+    return comments
+

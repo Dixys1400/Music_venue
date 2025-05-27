@@ -1,4 +1,8 @@
-from sqlalchemy import String, Integer, Float, Column
+from datetime import datetime
+
+from sqlalchemy import String, Integer, Float, Column, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
+
 from database import Base
 
 
@@ -12,5 +16,21 @@ class Song(Base):
     auditions = Column(Integer)
     country = Column(String)
     likes = Column(Integer, default=0)
+
+    comments = relationship("Comment", back_populates="song", cascade="all, delete")
+
+
+
+
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    song_id = Column(Integer, ForeignKey("songs.id"))
+    text = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    song = relationship("Song", back_populates="comments")
+
 
 

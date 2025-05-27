@@ -134,6 +134,13 @@ def get_top5_songs_by_auditions(db: Session = Depends(get_db)):
 
 
 
+@router.post("/comment", response_model=schemas.CommentOut)
+def create_comment(comment: schemas.CommentCreate, db: Session = Depends(get_db)):
+    db_comment = models.Comment(**comment.dict())
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    return db_comment
 
 
 

@@ -151,3 +151,14 @@ def get_comments_by_id(song_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Комментариев не найдено")
     return comments
 
+
+
+@router.delete("/delete_comment")
+def delete_comment(comment_id: int, db: Session = Depends(get_db)):
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Комментариев не найдено")
+
+    db.delete(comment)
+    db.commit()
+    return {"message": "Комментарий удален"}

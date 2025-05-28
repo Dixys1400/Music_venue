@@ -29,6 +29,7 @@ class Comment(Base):
     song_id = Column(Integer, ForeignKey("songs.id"))
     text = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    likes = Column(Integer, default=0)
 
     song = relationship("Song", back_populates="comments")
 

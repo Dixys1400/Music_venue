@@ -1,3 +1,5 @@
+from html.parser import HTMLParser
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import Optional, List
@@ -162,3 +164,14 @@ def delete_comment(comment_id: int, db: Session = Depends(get_db)):
     db.delete(comment)
     db.commit()
     return {"message": "Комментарий удален"}
+
+@router.post("/comment_like", response_model=schemas.CommentOut)
+def comment_like(comment_id: int, db: Session = Depends(get_db)):
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Комментарий не найден")
+
+    comment.likes += 1
+    db.commit()
+    db.refresh(comment)
+    return comment

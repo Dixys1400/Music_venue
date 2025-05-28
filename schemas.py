@@ -39,6 +39,7 @@ class CommentOut(CommentBase):
     id: int
     song_id: int
     created_at: datetime
+    likes: int
 
     class Config:
         orm_mode = True

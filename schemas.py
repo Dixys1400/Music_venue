@@ -45,3 +45,19 @@ class CommentOut(CommentBase):
         orm_mode = True
 
 
+
+
+
+
+class FavoriteBase(BaseModel):
+    song_id: int
+
+class FavoriteCreate(FavoriteBase):
+    pass
+
+class FavoriteOut(FavoriteBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True

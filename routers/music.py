@@ -133,3 +133,11 @@ def get_top5_songs_by_auditions(db: Session = Depends(get_db)):
 
 
 
+@router.post("/favorites/", response_model=schemas.FavoriteOut)
+def add_to_favorites(favorite: schemas.FavoriteCreate, db: Session = Depends(get_db)):
+    new_favorite = models.FavoriteTrack(song_id=favorite.song_id)
+    db.add(new_favorite)
+    db.commit()
+    db.refresh(new_favorite)
+    return new_favorite
+

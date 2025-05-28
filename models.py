@@ -18,6 +18,7 @@ class Song(Base):
     likes = Column(Integer, default=0)
 
     comments = relationship("Comment", back_populates="song", cascade="all, delete")
+    favorited_by = relationship("FavoriteTrack", back_populates="song")
 
 
 
@@ -32,6 +33,17 @@ class Comment(Base):
     likes = Column(Integer, default=0)
 
     song = relationship("Song", back_populates="comments")
+
+
+
+class FavoriteTrack(Base):
+    __tablename__ = "favorites"
+
+    id = Column(Integer, primary_key=True, index=True)
+    song_id = Column(Integer, ForeignKey("songs.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    song = relationship("Song", back_populates="favorited_by")
 
 
 

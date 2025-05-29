@@ -141,3 +141,6 @@ def add_to_favorites(favorite: schemas.FavoriteCreate, db: Session = Depends(get
     db.refresh(new_favorite)
     return new_favorite
 
+
+
+

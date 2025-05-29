@@ -39,6 +39,8 @@ def delete_comment(comment_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Комментарий удален"}
 
+
+
 @router.post("/comment_like", response_model=schemas.CommentOut)
 def comment_like(comment_id: int, db: Session = Depends(get_db)):
     comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
@@ -49,3 +51,18 @@ def comment_like(comment_id: int, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(comment)
     return comment
+
+
+@router.get("/songs/top-comment_by_likes", response_model=schemas.CommentOut)
+def get_top_comment(song_id: int, db: Session = Depends(get_db)):
+    top_comment = (
+        db.query(models.Comment)
+        .filter(models.Comment.song_id == song_id)
+        .order_by(models.Comment.likes.desc())
+        .first()
+    )
+
+    if not top_comment:
+        raise HTTPException(status_code=404, detail="Комментария не найдено")
+    return top_comment
+
